@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "kumar-harsh.graphql-for-vscode",
+    "william-voyek.vscode-nginx",
+    "Vue.volar"
+  ]
+}

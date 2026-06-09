@@ -1,0 +1,48 @@
+{
+  "name": "nuxt-payload-template",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.1",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "dotenv -- turbo run dev",
+    "build": "dotenv -- turbo run build",
+    "start": "dotenv -- turbo run start",
+    "generate": "dotenv -- turbo run generate",
+    "regenerate-image-sizes": "dotenv -- turbo run regenerate-image-sizes",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,md}\"",
+    "update": "pnpm up --interactive --recursive",
+    "update-latest": "pnpm up --interactive --latest --recursive",
+    "configure-env": "configure-env"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "configure-env": "^1.0.0",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "turbo": "^2.9.16",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "graphql": "^16.14.1",
+    "prettier": "^3.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild",
+      "ffmpeg-static",
+      "sharp",
+      "vue-demi"
+    ]
+  }
+}

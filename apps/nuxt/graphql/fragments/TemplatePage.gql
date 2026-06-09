@@ -1,0 +1,12 @@
+fragment TemplatePage on TemplatePage {
+  id
+  meta {
+    description
+    image {
+      ...Image
+    }
+    title
+  }
+  template
+  templatePageUri
+}

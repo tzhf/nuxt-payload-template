@@ -1,0 +1,65 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+    "NUXT_SITE_ENV",
+    "NITRO_HOST",
+    "NITRO_PORT",
+    "SITE_NAME",
+    "NEXT_PUBLIC_SITE_URL",
+    "PORT",
+    "NEXT_PUBLIC_PAYLOAD_API_ROUTE",
+    "DATABASE_NAME",
+    "DATABASE_URL",
+    "PAYLOAD_SECRET",
+    "S3_REGION",
+    "S3_BUCKET",
+    "S3_ACCESS_KEY_ID",
+    "S3_SECRET_ACCESS_KEY",
+    "CLOUDFRONT_DOMAIN"
+  ]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "SITE_NAME",
+        "NEXT_PUBLIC_SITE_URL",
+        "NEXT_PUBLIC_PORT",
+        "NEXT_PUBLIC_PAYLOAD_API_ROUTE"
+      ]
+    },
+    "nuxt#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".output/**"],
+      "env": ["NITRO_HOST", "NITRO_PORT"]
+    },
+    "payloadcms#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", "dist/**"],
+      "env": ["DATABASE_NAME", "PAYLOAD_SECRET"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    },
+    "generate": {
+      "cache": false
+    },
+    "payloadcms#generate": {
+      "outputs": ["types.d.ts"]
+    },
+    "nuxt#generate": {
+      "dependsOn": ["payloadcms#generate"],
+      "outputs": ["graphql/index.js", "graphql/possibleTypes.json"]
+    },
+    "regenerate-image-sizes": {
+      "cache": false
+    },
+    "lint": {},
+    "format": {}
+  }
+}

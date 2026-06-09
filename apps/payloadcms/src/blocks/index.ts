@@ -1,0 +1,3 @@
+export { default as Block } from './DefaultBlock'
+export { default as HeroBlock } from './HeroBlock'
+export { default as TextBlock } from './TextBlock'
