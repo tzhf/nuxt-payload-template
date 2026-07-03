@@ -68,9 +68,9 @@ export interface Config {
   blocks: {};
   collections: {
     images: Image;
+    pages: Page;
     svgs: SVG;
     staff: Staff;
-    'template-pages': TemplatePage;
     'video-thumbnails': VideoThumbnail;
     videos: Video;
     'payload-kv': PayloadKv;
@@ -81,9 +81,9 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     images: ImagesSelect<false> | ImagesSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     svgs: SvgsSelect<false> | SvgsSelect<true>;
     staff: StaffSelect<false> | StaffSelect<true>;
-    'template-pages': TemplatePagesSelect<false> | TemplatePagesSelect<true>;
     'video-thumbnails': VideoThumbnailsSelect<false> | VideoThumbnailsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -96,10 +96,10 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
-    siteSettings: SiteSettings;
+    'site-settings': SiteSettings;
   };
   globalsSelect: {
-    siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -220,6 +220,83 @@ export interface Image {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  /**
+   * URL path for this page, e.g. "about" or "blog/my-post". Use "home" for the homepage.
+   */
+  slug: string;
+  layout?: (HeroBlock | TextBlock)[] | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Image;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock".
+ */
+export interface HeroBlock {
+  anchorId?: string | null;
+  title: string;
+  subtitle?: string | null;
+  image?: (string | null) | Image;
+  buttons?: Button[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Button".
+ */
+export interface Button {
+  label: string;
+  url: string;
+  color?: ('primary' | 'secondary') | null;
+  variant?: ('solid' | 'ghost' | 'outline') | null;
+  size?: ('small' | 'medium' | 'large') | null;
+  openInNewTab?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'button';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextBlock".
+ */
+export interface TextBlock {
+  anchorId?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "svgs".
  */
 export interface SVG {
@@ -265,72 +342,6 @@ export interface Staff {
     | null;
   password?: string | null;
   collection: 'staff';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "template-pages".
- */
-export interface TemplatePage {
-  id: string;
-  homeTemplateFields?: {
-    myTextField?: string | null;
-    layout?: (HeroBlock | TextBlock)[] | null;
-  };
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | Image;
-  };
-  /**
-   * A template must be selected to display relevant page fields. Changing the template on existing pages will result in data loss.
-   */
-  template: 'Home';
-  templatePageUri?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HeroBlock".
- */
-export interface HeroBlock {
-  title: string;
-  subtitle?: string | null;
-  image?: (string | null) | Image;
-  cta?: {
-    label?: string | null;
-    url?: string | null;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'hero';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TextBlock".
- */
-export interface TextBlock {
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'text';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -410,16 +421,16 @@ export interface PayloadLockedDocument {
         value: string | Image;
       } | null)
     | ({
+        relationTo: 'pages';
+        value: string | Page;
+      } | null)
+    | ({
         relationTo: 'svgs';
         value: string | SVG;
       } | null)
     | ({
         relationTo: 'staff';
         value: string | Staff;
-      } | null)
-    | ({
-        relationTo: 'template-pages';
-        value: string | TemplatePage;
       } | null)
     | ({
         relationTo: 'video-thumbnails';
@@ -576,6 +587,70 @@ export interface ImagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  layout?:
+    | T
+    | {
+        hero?: T | HeroBlockSelect<T>;
+        text?: T | TextBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroBlock_select".
+ */
+export interface HeroBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  title?: T;
+  subtitle?: T;
+  image?: T;
+  buttons?:
+    | T
+    | {
+        button?: T | ButtonSelect<T>;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Button_select".
+ */
+export interface ButtonSelect<T extends boolean = true> {
+  label?: T;
+  url?: T;
+  color?: T;
+  variant?: T;
+  size?: T;
+  openInNewTab?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextBlock_select".
+ */
+export interface TextBlockSelect<T extends boolean = true> {
+  anchorId?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "svgs_select".
  */
 export interface SvgsSelect<T extends boolean = true> {
@@ -617,60 +692,6 @@ export interface StaffSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "template-pages_select".
- */
-export interface TemplatePagesSelect<T extends boolean = true> {
-  homeTemplateFields?:
-    | T
-    | {
-        myTextField?: T;
-        layout?:
-          | T
-          | {
-              hero?: T | HeroBlockSelect<T>;
-              text?: T | TextBlockSelect<T>;
-            };
-      };
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  template?: T;
-  templatePageUri?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HeroBlock_select".
- */
-export interface HeroBlockSelect<T extends boolean = true> {
-  title?: T;
-  subtitle?: T;
-  image?: T;
-  cta?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TextBlock_select".
- */
-export interface TextBlockSelect<T extends boolean = true> {
-  content?: T;
-  id?: T;
-  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -765,7 +786,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "siteSettings".
+ * via the `definition` "site-settings".
  */
 export interface SiteSettings {
   id: string;
@@ -777,8 +798,17 @@ export interface SiteSettings {
     fontSize: number;
   };
   colors?: {
-    backgroundColor?: string | null;
-    primaryColor?: string | null;
+    background?: string | null;
+    foreground?: string | null;
+    primary?: string | null;
+    primaryForeground?: string | null;
+    secondary?: string | null;
+    secondaryForeground?: string | null;
+    muted?: string | null;
+    mutedForeground?: string | null;
+    border?: string | null;
+    accent?: string | null;
+    accentForeground?: string | null;
   };
   navbar?: {
     textColor?: string | null;
@@ -793,15 +823,7 @@ export interface SiteSettings {
           id?: string | null;
         }[]
       | null;
-    buttons?:
-      | {
-          label: string;
-          url: string;
-          variant?: ('primary' | 'secondary' | 'ghost' | 'outline') | null;
-          openInNewTab?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
+    buttons?: Button[] | null;
   };
   footer?: {
     links?:
@@ -826,7 +848,7 @@ export interface SiteSettings {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "siteSettings_select".
+ * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   typography?:
@@ -838,8 +860,17 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   colors?:
     | T
     | {
-        backgroundColor?: T;
-        primaryColor?: T;
+        background?: T;
+        foreground?: T;
+        primary?: T;
+        primaryForeground?: T;
+        secondary?: T;
+        secondaryForeground?: T;
+        muted?: T;
+        mutedForeground?: T;
+        border?: T;
+        accent?: T;
+        accentForeground?: T;
       };
   navbar?:
     | T
@@ -859,11 +890,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         buttons?:
           | T
           | {
-              label?: T;
-              url?: T;
-              variant?: T;
-              openInNewTab?: T;
-              id?: T;
+              button?: T | ButtonSelect<T>;
             };
       };
   footer?:

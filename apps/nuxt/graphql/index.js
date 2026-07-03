@@ -1,13 +1,4 @@
 import gql from 'graphql-tag';
-export const SvgFragmentDoc = gql`
-    fragment SVG on SVG {
-  id
-  title
-  url
-  width
-  height
-}
-    `;
 export const ImageFragmentDoc = gql`
     fragment Image on Image {
   id
@@ -50,9 +41,44 @@ export const ImageFragmentDoc = gql`
   }
 }
     `;
-export const TemplatePageFragmentDoc = gql`
-    fragment TemplatePage on TemplatePage {
+export const ButtonFragmentDoc = gql`
+    fragment Button on Button {
+  blockType
+  label
+  url
+  color
+  variant
+  size
+  openInNewTab
+}
+    `;
+export const HeroBlockFragmentDoc = gql`
+    fragment HeroBlock on HeroBlock {
+  blockType
+  anchorId
+  title
+  subtitle
+  image {
+    ...Image
+  }
+  buttons {
+    ...Button
+  }
+}
+    ${ImageFragmentDoc}
+${ButtonFragmentDoc}`;
+export const TextBlockFragmentDoc = gql`
+    fragment TextBlock on TextBlock {
+  blockType
+  anchorId
+  content
+}
+    `;
+export const PageFragmentDoc = gql`
+    fragment Page on Page {
   id
+  title
+  slug
   meta {
     description
     image {
@@ -60,10 +86,17 @@ export const TemplatePageFragmentDoc = gql`
     }
     title
   }
-  template
-  templatePageUri
 }
     ${ImageFragmentDoc}`;
+export const SvgFragmentDoc = gql`
+    fragment SVG on SVG {
+  id
+  title
+  url
+  width
+  height
+}
+    `;
 export const VideoThumbnailFragmentDoc = gql`
     fragment VideoThumbnail on VideoThumbnail {
   id
@@ -95,8 +128,17 @@ export const GetGlobalsDocument = gql`
       fontSize
     }
     colors {
-      backgroundColor
-      primaryColor
+      background
+      foreground
+      primary
+      primaryForeground
+      secondary
+      secondaryForeground
+      muted
+      mutedForeground
+      border
+      accent
+      accentForeground
     }
     navbar {
       textColor
@@ -111,10 +153,7 @@ export const GetGlobalsDocument = gql`
         openInNewTab
       }
       buttons {
-        label
-        url
-        variant
-        openInNewTab
+        ...Button
       }
     }
     footer {
@@ -134,35 +173,20 @@ export const GetGlobalsDocument = gql`
   }
 }
     ${SvgFragmentDoc}
+${ButtonFragmentDoc}
 ${ImageFragmentDoc}`;
-export const GetHomePageDocument = gql`
-    query GetHomePage {
-  TemplatePages(limit: 1, where: {template: {equals: Home}}) {
+export const GetPageDocument = gql`
+    query GetPage($slug: String!) {
+  Pages(limit: 1, where: {slug: {equals: $slug}}) {
     docs {
-      ...TemplatePage
-      homeTemplateFields {
-        myTextField
-        layout {
-          ... on HeroBlock {
-            blockType
-            title
-            subtitle
-            image {
-              ...Image
-            }
-            cta {
-              label
-              url
-            }
-          }
-          ... on TextBlock {
-            blockType
-            content
-          }
-        }
+      ...Page
+      layout {
+        ...HeroBlock
+        ...TextBlock
       }
     }
   }
 }
-    ${TemplatePageFragmentDoc}
-${ImageFragmentDoc}`;
+    ${PageFragmentDoc}
+${HeroBlockFragmentDoc}
+${TextBlockFragmentDoc}`;

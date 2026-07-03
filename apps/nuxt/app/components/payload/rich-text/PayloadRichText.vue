@@ -51,12 +51,7 @@ import type {
   SerializedElementNode,
   SerializedTextNode,
 } from 'lexical'
-import type {
-  ApplicationsPage,
-  Image,
-  InsightArticle,
-  TemplatePage,
-} from '#payload-types'
+import type { Image, Page } from '#payload-types'
 import type { LexicalRichTextField } from './types'
 import type { SrcsetSizes } from '~/components/payload/image/types'
 
@@ -110,19 +105,10 @@ interface LexicalInternalLinkNode extends SerializedElementNode {
   type: 'autolink' | 'link'
   fields: {
     url: string
-    doc:
-      | {
-          relationTo: 'applications-pages'
-          value: ApplicationsPage
-        }
-      | {
-          relationTo: 'insight-articles'
-          value: InsightArticle
-        }
-      | {
-          relationTo: 'template-pages'
-          value: TemplatePage
-        }
+    doc: {
+      relationTo: 'pages'
+      value: Page
+    }
     newTab: boolean
     linkType: 'internal'
   }
@@ -203,8 +189,8 @@ const richTextContent = computed(() => {
 
 const getInternalUrl = (doc: LexicalInternalLinkNode['fields']['doc']) => {
   switch (doc.relationTo) {
-    case 'template-pages':
-      return doc.value.templatePageUri
+    case 'pages':
+      return doc.value.slug === 'home' ? '/' : `/${doc.value.slug}`
     default:
       return '/'
   }

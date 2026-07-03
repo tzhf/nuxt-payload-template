@@ -1,11 +1,10 @@
 <template>
-  <div v-if="fields">
-    <p v-text="fields.myTextField" class="text-primary" />
-    <template v-for="block in fields.layout" :key="block.id">
-      <PayloadHeroBlock v-if="block.blockType === 'hero'" :block="block" />
-      <PayloadTextBlock v-if="block.blockType === 'text'" :block="block" />
-    </template>
-  </div>
+  <!-- <div v-if="fields"> -->
+  <template v-for="block in fields?.layout" :key="block.id">
+    <PayloadHeroBlock v-if="block.blockType === 'hero'" :block="block" />
+    <PayloadTextBlock v-if="block.blockType === 'text'" :block="block" />
+  </template>
+  <!-- </div> -->
 </template>
 
 <script lang="ts" setup>

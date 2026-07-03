@@ -39,29 +39,31 @@ watchEffect(() => {
 })
 
 const cssVariables = computed(() => {
+  const c = siteSettings.value?.colors
   const font = siteSettings.value?.typography?.font || 'Inter'
   const fontSize = siteSettings.value?.typography?.fontSize || 14
-  const primaryColor = siteSettings.value?.colors?.primaryColor || '#ff0000'
-  const backgroundColor =
-    siteSettings.value?.colors?.backgroundColor || '#ffffff'
-  const navBackgroundColor =
-    siteSettings.value?.navbar?.backgroundColor || '#000000'
-  const navBackgroundColorScroll =
-    siteSettings.value?.navbar?.backgroundColorScroll || '#000000'
-  const navTextColor = siteSettings.value?.navbar?.textColor || '#ffffff'
 
   return `:root {
     --font-body: '${font}', sans-serif;
     --font-size: ${fontSize}px;
-    --color-primary: ${primaryColor};
-    --color-background: ${backgroundColor};
-    --nav-background-color: ${navBackgroundColor};
-    --nav-background-color-scroll: ${navBackgroundColorScroll};
-    --nav-text-color: ${navTextColor};
+    --color-background: ${c?.background || '#ffffff'};
+    --color-foreground: ${c?.foreground || '#111111'};
+    --color-primary: ${c?.primary || '#000000'};
+    --color-primary-foreground: ${c?.primaryForeground || '#ffffff'};
+    --color-secondary: ${c?.secondary || '#f4f4f5'};
+    --color-secondary-foreground: ${c?.secondaryForeground || '#111111'};
+    --color-muted: ${c?.muted || '#f4f4f5'};
+    --color-muted-foreground: ${c?.mutedForeground || '#71717a'};
+    --color-border: ${c?.border || '#e4e4e7'};
+    --color-accent: ${c?.accent || '#f4f4f5'};
+    --color-accent-foreground: ${c?.accentForeground || '#111111'};
+    --nav-background-color: ${siteSettings.value?.navbar?.backgroundColor || '#000000'};
+    --nav-background-color-scroll: ${siteSettings.value?.navbar?.backgroundColorScroll || '#000000'};
+    --nav-text-color: ${siteSettings.value?.navbar?.textColor || '#ffffff'};
   }`
 })
 
-useStyleTag(cssVariables)
+// useStyleTag(cssVariables)
 
 const googleFontsUrl = computed(() => {
   const font = siteSettings.value?.typography?.font || 'Inter'
@@ -72,6 +74,12 @@ const googleFontsUrl = computed(() => {
 })
 
 useHead(() => ({
+  style: [
+    {
+      innerHTML: cssVariables,
+      type: 'text/css',
+    },
+  ],
   link:
     import.meta.dev && googleFontsUrl.value
       ? [
@@ -89,25 +97,26 @@ useHead(() => ({
 /**
  * SEO / Meta
  */
-const opengraphImage = useRelationshipField(
-  computed(() => siteSettings.value?.meta?.image),
+const ogImageUrl = computed(
+  () =>
+    useRelationshipField(siteSettings.value?.meta?.image)?.value?.sizes
+      ?.opengraph?.url,
 )
 
 useSeoMeta({
-  ogImageWidth: 1200,
-  ogImageHeight: 630,
-  twitterCard: 'summary_large_image',
-  titleTemplate: (title) =>
+  titleTemplate: (title?: string) =>
     title
       ? `${title} | ${siteSettings.value?.meta?.title || config.public.siteName}`
       : siteSettings.value?.meta?.title || config.public.siteName,
-  ogTitle: siteSettings.value?.meta?.title,
+  description: siteSettings.value?.meta?.description || undefined,
   ogSiteName: siteSettings.value?.meta?.title || config.public.siteName,
-  twitterTitle: siteSettings.value?.meta?.title,
-  description: siteSettings.value?.meta?.description || '',
-  ogDescription: siteSettings.value?.meta?.description || '',
-  twitterDescription: siteSettings.value?.meta?.description || '',
-  ogImage: opengraphImage.value?.sizes?.opengraph?.url || '',
+  ogDescription: siteSettings.value?.meta?.description || undefined,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImage: ogImageUrl.value || undefined,
+  twitterDescription: siteSettings.value?.meta?.description || undefined,
+  twitterImage: ogImageUrl.value || undefined,
+  twitterCard: 'summary_large_image',
 })
 
 /**

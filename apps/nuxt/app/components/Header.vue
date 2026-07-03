@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // const { resolveLink } = useResolveLink()
-// const { activeHash } = useScrollSpy()
+const { activeHash } = useScrollSpy()
 const { siteSettings } = await useSiteSettings()
 
 const route = useRoute()
@@ -9,7 +9,7 @@ const path = computed(() => route.path)
 const headerScrollClass = ref('')
 onMounted(() => {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
+    if (window.scrollY > 300) {
       headerScrollClass.value = 'scroll'
     } else {
       headerScrollClass.value = ''
@@ -24,11 +24,16 @@ function toggle() {
   hasToggled.value = true
 }
 
-// function isLinkActive(link: NavItem['link']): boolean {
-//   const resolvedLink = resolveLink(link)
-//   if (resolvedLink.includes('#')) return activeHash.value === `#${resolvedLink.split('#')[1]}`
-//   return path.value === resolvedLink
-// }
+function isLinkActive(link: string): boolean {
+  if (link.includes('#')) {
+    const [linkPath, hash] = link.split('#')
+    const normalizedPath = linkPath?.startsWith('/') ? linkPath : `/${linkPath}`
+    // Only active if both path and hash match
+    if (linkPath && normalizedPath !== path.value) return false
+    return activeHash.value === `#${hash}`
+  }
+  return path.value === (link.startsWith('/') ? link : `/${link}`)
+}
 </script>
 
 <template>
@@ -83,18 +88,14 @@ function toggle() {
             :key="item.label"
             class="h-full"
           >
-            <!-- <NuxtLink
-                :to="item.url"
-                :target="item.openInNewTab ? '_blank' : undefined"
-                :rel="item.openInNewTab ? 'noopener noreferrer' : undefined"
-                class="relative flex h-full cursor-pointer items-center text-base font-medium "
-            >
-                {{ item.label }}
-            </NuxtLink> -->
-
             <NavItem
               :item="item"
-              :class="`transition-border border-y-[3px] border-t-transparent duration-500 ease-in-out`"
+              class="transition-border border-y-[3px] duration-500"
+              :class="
+                isLinkActive(item.url)
+                  ? 'border-t-transparent border-b-stone-900'
+                  : 'border-transparent'
+              "
             />
           </li>
 
@@ -102,42 +103,50 @@ function toggle() {
             v-for="button in siteSettings?.navbar?.buttons"
             :key="button.label"
           >
-            <!-- <Button :button="button" /> -->
+            <Button :button="button" />
           </li>
         </ul>
       </nav>
     </div>
 
     <!-- Mobile Nav overlay  -->
-    <Teleport to="body">
-      <nav
-        id="mobile-nav"
-        aria-label="Mobile navigation"
-        :aria-hidden="!menuOpen"
-        class="fixed inset-0 z-40 flex flex-col px-4 pt-28 opacity-75 backdrop-blur-md transition-transform duration-300 ease-in-out md:hidden"
-        :class="[menuOpen ? 'translate-x-0' : 'translate-x-full']"
-      >
-        <ul class="space-y-12" role="list">
-          <li
-            v-for="item in siteSettings?.navbar?.links"
-            :key="item.label"
-            class="flex"
-          >
-            <NavItem
-              :item="item"
-              :class="`transition-border border-y-[3px] border-t-transparent duration-500 ease-in-out`"
-            />
-          </li>
+    <ClientOnly>
+      <Teleport to="body">
+        <nav
+          id="mobile-nav"
+          aria-label="Mobile navigation"
+          :aria-hidden="!menuOpen"
+          class="fixed inset-0 z-40 flex flex-col px-4 pt-28 transition-transform duration-300 ease-in-out md:hidden"
+          :class="[menuOpen ? 'translate-x-0' : 'translate-x-full']"
+        >
+          <ul class="space-y-12" role="list">
+            <li
+              v-for="item in siteSettings?.navbar?.links"
+              :key="item.label"
+              class="flex"
+            >
+              <NavItem
+                :item="item"
+                @click="menuOpen = false"
+                class="transition-border border-y-[3px] duration-500 ease-in-out"
+                :class="
+                  isLinkActive(item.url)
+                    ? 'border-t-transparent border-b-stone-900'
+                    : 'border-transparent'
+                "
+              />
+            </li>
 
-          <li
-            v-for="button in siteSettings?.navbar?.buttons"
-            :key="button.label"
-          >
-            <!-- <Button :button="button" @click="menuOpen = false" /> -->
-          </li>
-        </ul>
-      </nav>
-    </Teleport>
+            <li
+              v-for="button in siteSettings?.navbar?.buttons"
+              :key="button.label"
+            >
+              <Button :button="button" @click="menuOpen = false" />
+            </li>
+          </ul>
+        </nav>
+      </Teleport>
+    </ClientOnly>
   </header>
 </template>
 
@@ -147,11 +156,19 @@ header,
   background-color: var(--nav-background-color);
   color: var(--nav-text-color);
 }
+#mobile-nav {
+  background-color: color-mix(
+    in srgb,
+    var(--nav-background-color) 80%,
+    transparent
+  );
+  backdrop-filter: blur(4px);
+}
 header.scroll {
   background-color: var(--nav-background-color-scroll);
 }
 
-/* section[id] {
-  scroll-margin-top: 80px; /* match your header height
-} */
+section[id] {
+  scroll-margin-top: 80px; /* match your header height */
+}
 </style>

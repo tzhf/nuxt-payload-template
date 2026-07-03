@@ -1,6 +1,16 @@
+<script lang="ts" setup>
+import type { HeroBlock } from '#payload-types'
+
+defineProps<{
+  block: HeroBlock
+}>()
+</script>
+
 <template>
-  <section class="relative flex min-h-[70vh] items-center overflow-hidden">
-    <!-- Background image -->
+  <section
+    :id="block.anchorId ?? undefined"
+    class="relative flex min-h-[70vh] items-center overflow-hidden"
+  >
     <div v-if="block.image" class="absolute inset-0 z-0">
       <img
         :src="block.image.sizes?.xl?.url || ''"
@@ -23,20 +33,9 @@
         v-text="block.subtitle"
       />
 
-      <button
-        v-if="block.cta?.label && block.cta?.url"
-        :href="block.cta.url"
-        class="inline-block bg-white px-8 py-4 font-semibold text-black transition-colors hover:bg-white/90"
-        v-text="block.cta.label"
-      />
+      <div v-for="button in block.buttons" :key="button.label">
+        <Button :button="button" />
+      </div>
     </div>
   </section>
 </template>
-
-<script lang="ts" setup>
-import type { HeroBlock } from '#payload-types'
-
-defineProps<{
-  block: HeroBlock
-}>()
-</script>

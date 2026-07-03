@@ -1,0 +1,12 @@
+fragment HeroBlock on HeroBlock {
+  blockType
+  anchorId
+  title
+  subtitle
+  image {
+    ...Image
+  }
+  buttons {
+    ...Button
+  }
+}

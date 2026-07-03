@@ -1,7 +1,8 @@
 import type { GlobalConfig } from 'payload'
 import { livePreviewBreakpoints } from '~/utils'
 
-import { colorField, buttonField } from '~/fields'
+import { colorField } from '~/fields'
+import Button from '~/blocks/ui/Button'
 
 const colorPresets = [
   '#FF6B6B',
@@ -15,7 +16,7 @@ const colorPresets = [
 ]
 
 const SiteSettings: GlobalConfig = {
-  slug: 'siteSettings',
+  slug: 'site-settings',
   graphQL: {
     name: 'SiteSettings',
   },
@@ -30,7 +31,7 @@ const SiteSettings: GlobalConfig = {
     },
   },
   access: {
-    read: (_) => true,
+    read: () => true,
   },
   fields: [
     {
@@ -66,19 +67,48 @@ const SiteSettings: GlobalConfig = {
               type: 'group',
               fields: [
                 colorField({
-                  name: 'backgroundColor',
-                  overrides: (field) => ({
-                    ...field,
-                    defaultValue: '#FFFFFF',
-                  }),
+                  name: 'background',
+                  overrides: (f) => ({ ...f, defaultValue: '#ffffff' }),
                 }),
                 colorField({
-                  name: 'primaryColor',
-                  colorPresets: colorPresets,
-                  overrides: (field) => ({
-                    ...field,
-                    defaultValue: '#FF6B6B',
-                  }),
+                  name: 'foreground',
+                  overrides: (f) => ({ ...f, defaultValue: '#111111' }),
+                }),
+                colorField({
+                  name: 'primary',
+                  overrides: (f) => ({ ...f, defaultValue: '#000000' }),
+                }),
+                colorField({
+                  name: 'primaryForeground',
+                  overrides: (f) => ({ ...f, defaultValue: '#ffffff' }),
+                }),
+                colorField({
+                  name: 'secondary',
+                  overrides: (f) => ({ ...f, defaultValue: '#f4f4f5' }),
+                }),
+                colorField({
+                  name: 'secondaryForeground',
+                  overrides: (f) => ({ ...f, defaultValue: '#111111' }),
+                }),
+                colorField({
+                  name: 'muted',
+                  overrides: (f) => ({ ...f, defaultValue: '#f4f4f5' }),
+                }),
+                colorField({
+                  name: 'mutedForeground',
+                  overrides: (f) => ({ ...f, defaultValue: '#71717a' }),
+                }),
+                colorField({
+                  name: 'border',
+                  overrides: (f) => ({ ...f, defaultValue: '#e4e4e7' }),
+                }),
+                colorField({
+                  name: 'accent',
+                  overrides: (f) => ({ ...f, defaultValue: '#f4f4f5' }),
+                }),
+                colorField({
+                  name: 'accentForeground',
+                  overrides: (f) => ({ ...f, defaultValue: '#111111' }),
                 }),
               ],
             },
@@ -132,8 +162,8 @@ const SiteSettings: GlobalConfig = {
                 },
                 {
                   name: 'buttons',
-                  type: 'array',
-                  fields: [buttonField('button').fields].flat(), // spread the fields
+                  type: 'blocks',
+                  blocks: [Button],
                 },
               ],
             },

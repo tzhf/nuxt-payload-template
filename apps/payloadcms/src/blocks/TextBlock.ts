@@ -7,6 +7,10 @@ const TextBlock: Block = {
   interfaceName: 'TextBlock',
   fields: [
     {
+      name: 'anchorId',
+      type: 'text',
+    },
+    {
       name: 'content',
       type: 'richText',
       editor: lexicalEditor({}),

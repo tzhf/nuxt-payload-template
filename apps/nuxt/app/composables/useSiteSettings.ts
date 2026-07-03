@@ -15,11 +15,3 @@ export const useSiteSettings = async () => {
 
   return { siteSettings }
 }
-
-// export const useActiveSettings = () => {
-//   const activeSettings = useState<SiteSettings | null>(
-//     'activeSettings',
-//     () => null,
-//   )
-//   return { activeSettings }
-// }

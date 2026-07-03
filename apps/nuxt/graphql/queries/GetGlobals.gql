@@ -5,8 +5,17 @@ query GetGlobals {
       fontSize
     }
     colors {
-      backgroundColor
-      primaryColor
+      background
+      foreground
+      primary
+      primaryForeground
+      secondary
+      secondaryForeground
+      muted
+      mutedForeground
+      border
+      accent
+      accentForeground
     }
     navbar {
       textColor
@@ -21,10 +30,7 @@ query GetGlobals {
         openInNewTab
       }
       buttons {
-        label
-        url
-        variant
-        openInNewTab
+        ...Button
       }
     }
     footer {

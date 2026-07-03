@@ -4,7 +4,17 @@
 @import './fonts-dynamic.css';
 
 @theme {
-  --color-primary: #ff0000;
+  --color-background: #ffffff;
+  --color-foreground: #111111;
+  --color-primary: #000000;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #111111;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+  --color-border: #e4e4e7;
+  --color-accent: #f4f4f5;
+  --color-accent-foreground: #111111;
 }
 
 @layer base {

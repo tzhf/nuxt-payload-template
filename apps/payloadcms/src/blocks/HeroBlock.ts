@@ -1,10 +1,16 @@
 import type { Block } from 'payload'
+import Button from '~/blocks/ui/Button'
 
 const HeroBlock: Block = {
   slug: 'hero',
+
   labels: { singular: 'Hero', plural: 'Heroes' },
   interfaceName: 'HeroBlock',
   fields: [
+    {
+      name: 'anchorId',
+      type: 'text',
+    },
     {
       name: 'title',
       type: 'text',
@@ -20,13 +26,18 @@ const HeroBlock: Block = {
       relationTo: 'images',
     },
     {
-      name: 'cta',
-      type: 'group',
-      fields: [
-        { name: 'label', type: 'text' },
-        { name: 'url', type: 'text' },
-      ],
+      name: 'buttons',
+      type: 'blocks',
+      blocks: [Button],
     },
+    // {
+    //   name: 'cta',
+    //   type: 'group',
+    //   fields: [
+    //     { name: 'label', type: 'text' },
+    //     { name: 'url', type: 'text' },
+    //   ],
+    // },
   ],
 }
 

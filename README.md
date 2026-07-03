@@ -41,6 +41,10 @@ pnpm run update
 # Update packages interactively (major versions)
 pnpm run update-latest
 
+# Start NGINX
+cd C:\nginx
+.\nginx.exe
+
 # Start dev server
 pnpm run dev
 

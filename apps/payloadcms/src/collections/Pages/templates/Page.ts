@@ -1,17 +1,13 @@
 import type { Field } from 'payload'
 import { HeroBlock, TextBlock } from '../../../blocks'
 
-const Home: Field = {
-  name: 'homeTemplateFields',
+const Page: Field = {
+  name: 'pageFields',
   type: 'group',
   admin: {
-    condition: (data) => data.template === 'Home',
+    condition: (data) => data.template === 'Page',
   },
   fields: [
-    {
-      name: 'myTextField',
-      type: 'text',
-    },
     {
       name: 'layout',
       type: 'blocks',
@@ -20,4 +16,4 @@ const Home: Field = {
   ],
 }
 
-export default Home
+export default Page
