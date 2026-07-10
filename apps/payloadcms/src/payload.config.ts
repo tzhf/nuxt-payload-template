@@ -18,6 +18,17 @@ const __dirname = path.dirname(__filename)
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SITE_URL,
+  // Add your Nuxt frontend Vercel URL to both of these arrays
+  cors: [
+    'https://my-project-frontend-taupe.vercel.app',
+    process.env.NEXT_PUBLIC_SITE_URL,
+  ].filter(Boolean),
+
+  csrf: [
+    'https://my-project-frontend-taupe.vercel.app',
+    process.env.NEXT_PUBLIC_SITE_URL,
+  ].filter(Boolean),
+
   secret: process.env.PAYLOAD_SECRET,
   debug: process.env.NODE_ENV !== 'production',
   admin: {
