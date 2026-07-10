@@ -48,7 +48,10 @@ const normaliseSvg: CollectionBeforeOperationHook = async ({ args, req }) => {
 
     if (svg) {
       updateAttributes(svg)
-      args.req.file.data = Buffer.from(svg.toString(), 'utf8')
+
+      if (args.req?.file) {
+        args.req.file.data = Buffer.from(svg.toString(), 'utf8')
+      }
     }
   }
 
