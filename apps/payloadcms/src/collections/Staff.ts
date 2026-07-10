@@ -31,9 +31,14 @@ const isUpdatingSuperAdmin: Access<Staff> = ({ data }) =>
 
 const StaffCollection: CollectionConfig = {
   slug: 'staff',
+
   admin: {
     group: '🗄️ Admin',
     useAsTitle: 'fullName',
+  },
+  labels: {
+    singular: '👤 Staff',
+    plural: '👤 Staff',
   },
   auth: {
     tokenExpiration: 60 * 60 * 24,

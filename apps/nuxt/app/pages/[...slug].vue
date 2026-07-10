@@ -23,15 +23,12 @@ const initialData = await usePayloadPage(slug).catch((err) => {
     fatal: true,
   })
 })
+
 const { data: doc } = useLivePreview({ initialData, depth: 1 })
 
 const page = computed(() => doc.value ?? initialData)
 
 const layout = computed(() => page.value?.layout || [])
 
-// watchEffect(() => {
-//   usePayloadSeo(page)
-// })
 usePayloadSeo(page)
-// useSeoResolver(page)
 </script>

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import type { Button } from '#payload-types'
+export type ButtonProps = Omit<Button, 'id' | 'blockName' | 'blockType'>
 
 const props = defineProps<{
-  button: Button
+  button?: Partial<ButtonProps>
+  tag?: 'button' | 'a' | 'NuxtLink'
 }>()
+
+// const emit = defineEmits(['click'])
 
 const base =
   'font-semibold inline-flex w-full sm:w-auto items-center justify-center tracking-wider cursor-pointer transition-all duration-300 rounded-md'
@@ -35,21 +39,28 @@ const buttonClasses: Record<ButtonVariant, Record<ButtonColor, string>> = {
 }
 
 const classes = computed(() => {
-  const size = sizes[props.button.size ?? 'medium']
-  const variant = props.button.variant ?? 'solid'
-  const color = props.button.color ?? 'primary'
+  const size = sizes[props.button?.size ?? 'medium']
+  const variant = props.button?.variant ?? 'solid'
+  const color = props.button?.color ?? 'primary'
   const style = buttonClasses[variant][color]
   return `${base} ${size} ${style}`
+})
+
+const component = computed(() => {
+  if (props.tag) return props.tag
+  if (props.button?.url) return resolveComponent('NuxtLink')
+  return 'button'
 })
 </script>
 
 <template>
-  <NuxtLink
-    :to="button.url"
-    :target="button.openInNewTab ? '_blank' : undefined"
-    :rel="button.openInNewTab ? 'noopener noreferrer' : undefined"
+  <component
+    :is="component"
+    :to="button?.url"
+    :target="button?.openInNewTab ? '_blank' : undefined"
+    :rel="button?.openInNewTab ? 'noopener noreferrer' : undefined"
     :class="classes"
   >
-    {{ button.label }}
-  </NuxtLink>
+    <slot>{{ button?.label }}</slot>
+  </component>
 </template>

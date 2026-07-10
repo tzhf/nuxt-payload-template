@@ -1,5 +1,4 @@
 import { GetPageDocument } from '#graphql-exports'
-import type { UseSeoMetaInput } from '@unhead/vue'
 
 import type { PaginatedDocs } from 'payload'
 import type { Page } from '#payload-types'
@@ -9,8 +8,6 @@ interface PageQueryResult {
 }
 
 export const usePayloadPage = async (slug: Ref<string>) => {
-  // const doc = ref<Page | null>(null)
-
   const { data, error } = await useAsyncQuery<PageQueryResult>(
     GetPageDocument,
     { slug },
@@ -25,7 +22,6 @@ export const usePayloadPage = async (slug: Ref<string>) => {
   }
 
   const doc = data.value?.Pages.docs[0] || null
-  // doc.value = data.value?.Pages.docs[0] || null
 
   if (!doc) {
     throw createError({

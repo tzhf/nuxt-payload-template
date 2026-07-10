@@ -104,10 +104,14 @@ import { slug } from '~/fields'
 
 const Pages: CollectionConfig = {
   slug: 'pages',
+  labels: {
+    singular: '📄 Page',
+    plural: '📄 Pages',
+  },
   admin: {
     useAsTitle: 'title',
     group: '📄 Content',
-    defaultColumns: ['title', 'slug', 'id'],
+    defaultColumns: ['title', 'slug'],
     livePreview: {
       url: ({ data }) => {
         const url = new URL(process.env.NEXT_PUBLIC_SITE_URL)

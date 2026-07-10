@@ -1,21 +1,26 @@
 <template>
-  <div class="flex min-h-screen items-center justify-center">
-    <div class="text-center">
-      <h1 class="mb-4 text-6xl font-bold">
-        {{ errorData.code }}
-      </h1>
+  <div class="flex flex-col items-center justify-between gap-12 px-20 pt-24">
+    <div class="flex flex-col items-center gap-6">
+      <div class="flex flex-col items-center gap-2">
+        <h1 class="text-8xl font-extrabold">Uh-oh!</h1>
+        <h2 class="text-2xl leading-10 font-bold">
+          {{ errorData.code }}
+        </h2>
+        <p class="text-center text-lg leading-7 font-normal text-stone-700">
+          {{ errorData.message }}
+        </p>
+      </div>
 
-      <p class="mb-8 text-xl">
-        {{ errorData.message }}
-      </p>
-
-      <button
-        class="bg-primary text-primary-foreground inline-flex w-full cursor-pointer items-center justify-center rounded-md px-8 py-3 text-base font-semibold tracking-wider transition-all duration-300 hover:opacity-90 sm:w-auto"
-        @click="handleError"
-      >
-        Go back home
-      </button>
+      <Button @click="handleError">Go back home</Button>
     </div>
+
+    <img
+      src="/404.png"
+      alt="A confused dog with a glasses and a knitted sweater."
+      class="max-w-none -translate-x-15 object-cover"
+      :width="504"
+      :height="288"
+    />
   </div>
 </template>
 
@@ -33,7 +38,7 @@ const errorData = computed(() => {
     case 404:
       return {
         code: 404,
-        message: 'Page not found',
+        message: 'We couldn’t find the page you’re looking for.',
       }
 
     case 500:
@@ -59,7 +64,7 @@ const errorData = computed(() => {
 })
 
 useSeoMeta({
-  title: `${errorData.value.code} — Error`,
+  title: `${errorData.value.code} — ${errorData.value.message}`,
 })
 
 const handleError = () => clearError({ redirect: '/' })

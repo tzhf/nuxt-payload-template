@@ -11,7 +11,7 @@ defineProps<{
     :id="block.anchorId ?? undefined"
     class="mx-auto max-w-3xl px-6 py-16"
   >
-    <div class="prose prose-lg max-w-none">
+    <div class="prose max-w-none">
       <PayloadRichText v-if="block.content" :content="block.content" />
     </div>
   </section>
