@@ -65,12 +65,22 @@ export default defineNuxtConfig({
   apollo: {
     clients: {
       default: {
-        httpEndpoint: `http://127.0.0.1:3001${NEXT_PUBLIC_PAYLOAD_API_ROUTE}/graphql`,
+        // SERVER-SIDE TARGET:
+        // In production, point directly to your live Vercel Payload domain.
+        // In local dev, fall back to the 127.0.0.1:3001 port.
+        httpEndpoint:
+          process.env.NODE_ENV === 'production'
+            ? `https://nuxt-payload-template-payloadcms.vercel.app${NEXT_PUBLIC_PAYLOAD_API_ROUTE}/graphql`
+            : `http://127.0.0.1:3001${NEXT_PUBLIC_PAYLOAD_API_ROUTE}/graphql`,
+
+        // BROWSER-SIDE TARGET:
+        // Keep this exactly as the author wrote it! It leverages your vercel.json rewrites.
         browserHttpEndpoint: [
           NEXT_PUBLIC_SITE_URL,
           NEXT_PUBLIC_PAYLOAD_API_ROUTE,
           '/graphql',
         ].join(''),
+
         inMemoryCacheOptions: { possibleTypes },
         connectToDevTools: isDev,
       },
