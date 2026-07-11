@@ -22,8 +22,8 @@ export const useLivePreview = <T>(props: {
   const isLoading = ref(true)
   const hasSentReadyMessage = ref(false)
 
-  const onChange = (mergedData: T) => {
-    data.value = mergedData
+  const onChange = (mergedData: Record<string, any>) => {
+    data.value = mergedData as T
     isLoading.value = false
   }
 
